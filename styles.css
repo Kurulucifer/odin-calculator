@@ -71,7 +71,6 @@ body {
     background-color: lightseagreen;
 
     flex: 3;
-    column-gap: 32px;
 }
 
 .right-buttons {
@@ -89,6 +88,11 @@ body {
 
     font-size: 40px;
     font-weight: 700;
+    margin: 0px 16px;
+}
+
+.misc {
+    font-size: 24px;
 }
 
 .num, .op {
@@ -102,7 +106,7 @@ body {
     background-color: aquamarine;
 
     height: 64px;
-    width: 256px;
+    width: 112px;
 }
 
 
