@@ -32,5 +32,10 @@ function evaluate(x, y, op) {
 }
 
 /*
-What is the gameplan here
+So we have four basic operation functions and a master
+function to evaluate to one of them...
+
+What else?
+
+Okay first I'll deal with the HTML
 */

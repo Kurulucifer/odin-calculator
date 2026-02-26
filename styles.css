@@ -1,0 +1,110 @@
+html, body {
+    height: 100%;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.calc-container, 
+.calc-display,
+.all-buttons {
+    box-sizing: border-box;
+}
+
+.calc-container {
+    background-color: slategray;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 400px;
+    height: 600px;
+}
+
+/* Display */
+
+.calc-display {
+    background-color: aliceblue;
+    
+    flex: 1;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    
+    border: 4px solid darkslategrey; 
+}
+
+#output {
+    font-size: 63px;
+    font-weight: 700;
+    margin: 16px;
+}
+
+/* Entire Button Container */
+
+.all-buttons {
+    background-color: aliceblue;
+
+    flex: 5;
+
+    display: flex;
+
+    border: 4px solid darkslategrey;
+}
+
+/* Button Containers */
+
+.left-buttons, .right-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.left-buttons {
+    background-color: lightseagreen;
+
+    flex: 3;
+    column-gap: 32px;
+}
+
+.right-buttons {
+    background-color: lightcoral;
+
+    flex: 1;
+}
+
+/* Buttons */
+
+.num, .op, .misc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.num, .op {
+    background-color: lightgoldenrodyellow;
+
+    width: 64px;
+    height: 64px;
+}
+
+.misc {
+    background-color: aquamarine;
+
+    height: 64px;
+    width: 256px;
+}
+
+
+
+
