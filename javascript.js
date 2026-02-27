@@ -1,7 +1,6 @@
-let expr = [];
-
-const opRegex = /[+|\-|*|/]/;
-
+const allButtons = document.querySelector(".all-buttons");
+const display = document.querySelector("#output");
+const opRegex = /([+|\-|*|/])/;
 const SYMBOL_TABLE = {
     clear: "clear",
     backspace: "back",
@@ -25,38 +24,87 @@ const SYMBOL_TABLE = {
     equals: '=',
 }
 
-const allButtons = document.querySelector(".all-buttons");
+let expr = [];
+let justEvaluated = false;
 
 allButtons.addEventListener('click', e => buildExpression(e));
 
 function buildExpression(event) {
+    console.log(event.target);
     let button = SYMBOL_TABLE[event.target.id];
-    if (button === undefined) {
+    let type = event.target.className;
+
+    switch (button) {
+        case undefined:
+            return;
+        case "clear":
+            expr = [];
+            updateDisplay();
+            return;
+        case "back": 
+            expr.pop();
+            updateDisplay();
+            return;
+            
+    }
+
+    // If it's only one number and an operator
+    let singleNumber = opRegex.test(expr.at(-1));
+
+    // Replace operator if pressing operators consecutively
+    if (singleNumber && opRegex.test(button)) {
+        expr.pop(); 
+    }
+    else if (expr.some(item => opRegex.test(item)) && !singleNumber && type === "op") {
+        justEvaluated = true;
+        expr = [evaluateExpression(expr)];
+    }
+    else if (justEvaluated && type === "num") {
+        justEvaluated = false;
+        expr = [];
+    }
+    else if (button === 0 && !expr.length) {
         return;
     }
 
-    switch (button) {
-        case "clear":
-            console.log("some clear function");
-            return;
-        case "back": 
-            console.log("some back function");
-            return;
-    }
-
-    if (opRegex.test(expr.at(-1)) && opRegex.test(button)) {
-        expr.pop();
-    }
-    else if (expr.some(item => opRegex.test(item)) && isNaN(button)) {
-        console.log("send to evaluation");
-        if (button === '=')
-            return;
+    if (button === '=') {
+        updateDisplay();
+        return;
     }
 
     expr.push(button);
-    console.log(expr);
+    updateDisplay();
 }
 
+function updateDisplay () {
+    if (!expr.length) {
+        display.textContent = "0";
+        return;
+    }
+
+    let toDisplay = expr.join('').split(opRegex).join(' ');
+    display.textContent = toDisplay;
+}
+
+function evaluateExpression(arr) {
+    let expression = arr.join('').split(opRegex);
+    let [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
+    return operateExpression(num1, num2, op);
+}
+
+
+function operateExpression(x, y, op) {
+    switch (op) {
+        case "+":
+            return add(x, y);
+        case "-":
+            return subtract(x, y);
+        case "*":
+            return multiply(x, y);
+        case "/":
+            return divide(x, y);
+    }
+}
 
 function add(x, y) {
     return x + y;
@@ -74,18 +122,6 @@ function divide(x, y) {
     return x / y;
 }
 
-function evaluate(x, y, op) {
-    switch (op) {
-        case "+":
-            return add(x, y);
-        case "-":
-            return subtract(x, y);
-        case "*":
-            return multiply(x, y);
-        case "/":
-            return divide(x, y);
-    }
-}
 
 /*
 So we have four basic operation functions and a master
