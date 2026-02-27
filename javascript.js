@@ -45,7 +45,7 @@ function resolveKey(key) {
         keyButton = [...opButtons].find(button => button.firstElementChild.textContent === key);
     }
     else if (key === "Enter") {
-        keyButton = document.querySelector("button#equals")
+        keyButton = document.querySelector("button#equals");
     }
     else if (key === "Escape") {
         keyButton = document.querySelector("button#clear");
@@ -80,7 +80,7 @@ function updateExpression(target) {
             return;
     }
 
-    if (expr.join('').length > 7) {
+    if (expr.join('').length > 10) {
         alert("Too many digits!");
         return;
     }
@@ -150,9 +150,14 @@ function evaluateExpression() {
     if (expression[0] === '-') {
         expression[1] = expression[0] + expression[1];
         expression.splice(0, 1);
-    } 
+    }
     const [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
-    return operateExpression(num1, num2, op);
+    const result = operateExpression(num1, num2, op);
+    
+    if (result.toString().includes('.')) {
+        return result.toFixed(2);
+    }
+    return result;
 }
 
 
