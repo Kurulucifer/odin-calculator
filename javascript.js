@@ -5,6 +5,7 @@ const SYMBOL_TABLE = {
     clear: "clear",
     backspace: "back",
     neg: '-',
+    dec: '.',
 
     zero: 0,
     one: 1,
@@ -27,9 +28,9 @@ const SYMBOL_TABLE = {
 let expr = [];
 let justEvaluated = false;
 
-allButtons.addEventListener('click', e => buildExpression(e));
+allButtons.addEventListener('click', e => updateExpression(e));
 
-function buildExpression(event) {
+function updateExpression(event) {
     console.log(event.target);
     let button = SYMBOL_TABLE[event.target.id];
     let type = event.target.className;
@@ -60,7 +61,6 @@ function buildExpression(event) {
         expr = [evaluateExpression(expr)];
     }
     else if (justEvaluated && type === "num") {
-        justEvaluated = false;
         expr = [];
     }
     else if (button === 0 && !expr.length) {
@@ -72,6 +72,8 @@ function buildExpression(event) {
         return;
     }
 
+    justEvaluated = false;
+    
     expr.push(button);
     updateDisplay();
 }
