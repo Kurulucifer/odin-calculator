@@ -76,6 +76,11 @@ function updateExpression(target) {
             return;
     }
 
+    if (expr.join('').length > 9) {
+        alert("Too many digits!");
+        return;
+    }
+
     // If it's only one number and an operator
     const singleNumber = opRegex.test(expr.at(-1));
 
