@@ -31,7 +31,6 @@ let justEvaluated = false;
 allButtons.addEventListener('click', e => updateExpression(e));
 
 function updateExpression(event) {
-    console.log(event.target);
     let button = SYMBOL_TABLE[event.target.id];
     let type = event.target.className;
 
@@ -46,7 +45,6 @@ function updateExpression(event) {
             expr.pop();
             updateDisplay();
             return;
-            
     }
 
     // If it's only one number and an operator
@@ -58,10 +56,13 @@ function updateExpression(event) {
     }
     else if (expr.some(item => opRegex.test(item)) && !singleNumber && type === "op") {
         justEvaluated = true;
-        expr = [evaluateExpression(expr)];
+        expr = [evaluateExpression()];
     }
     else if (justEvaluated && type === "num") {
         expr = [];
+    }
+    else if (!hasDecimal() && button === '.') {
+        return;
     }
     else if (button === 0 && !expr.length) {
         return;
@@ -78,6 +79,17 @@ function updateExpression(event) {
     updateDisplay();
 }
 
+function hasDecimal () {
+    let expression = expr.join('').split(opRegex);
+    if (expression.length === 1 && !expression[0].includes('.')) {
+        return true;
+    }
+    else if (expression.length === 3 && !expression[2].includes('.')) {
+        return true;
+    }
+    return false;
+}
+
 function updateDisplay () {
     if (!expr.length) {
         display.textContent = "0";
@@ -88,8 +100,8 @@ function updateDisplay () {
     display.textContent = toDisplay;
 }
 
-function evaluateExpression(arr) {
-    let expression = arr.join('').split(opRegex);
+function evaluateExpression() {
+    let expression = expr.join('').split(opRegex);
     let [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
     return operateExpression(num1, num2, op);
 }
