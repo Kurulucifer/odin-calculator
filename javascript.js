@@ -74,9 +74,13 @@ function updateExpression(target) {
             expr.pop();
             updateDisplay();
             return;
+        case "pineapple":
+            pineapple();
+            updateDisplay();
+            return;
     }
 
-    if (expr.join('').length > 9) {
+    if (expr.join('').length > 7) {
         alert("Too many digits!");
         return;
     }
@@ -112,6 +116,11 @@ function updateExpression(target) {
     
     expr.push(button);
     updateDisplay();
+}
+
+function pineapple() {
+    let randomNumber = Math.floor((Math.random() * 100000000));
+    expr = randomNumber.toString().split('');
 }
 
 function hasDecimal () {
