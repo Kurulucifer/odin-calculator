@@ -1,5 +1,9 @@
 const allButtons = document.querySelector(".all-buttons");
 const display = document.querySelector("#output");
+const body = document.querySelector("body");
+const numButtons = document.querySelectorAll(".num");
+const opButtons = document.querySelectorAll(".op");
+
 const opRegex = /([+|\-|*|/])/;
 const SYMBOL_TABLE = {
     clear: "clear",
@@ -28,11 +32,36 @@ const SYMBOL_TABLE = {
 let expr = [];
 let justEvaluated = false;
 
-allButtons.addEventListener('click', e => updateExpression(e));
+allButtons.addEventListener('click', e => updateExpression(e.target));
+body.addEventListener('keydown', e => resolveKey(e.key))
 
-function updateExpression(event) {
-    let button = SYMBOL_TABLE[event.target.id];
-    let type = event.target.className;
+function resolveKey(key) {
+    let keyButton = null;
+
+    if (!isNaN(key)) {
+        keyButton = [...numButtons].find(button => button.firstElementChild.textContent === key);
+    }
+    else if (opRegex.test(key)) {
+        keyButton = [...opButtons].find(button => button.firstElementChild.textContent === key);
+    }
+    else if (key === "Enter") {
+        keyButton = document.querySelector("button#equals")
+    }
+    else if (key === "Escape") {
+        keyButton = document.querySelector("button#clear");
+    }
+    else if (key === "Backspace") {
+        keyButton = document.querySelector("button#backspace");
+    }
+
+    if (keyButton) {
+        updateExpression(keyButton);
+    }
+}
+
+function updateExpression(target) {
+    const button = SYMBOL_TABLE[target.id];
+    const type = target.className;
 
     switch (button) {
         case undefined:
@@ -48,7 +77,7 @@ function updateExpression(event) {
     }
 
     // If it's only one number and an operator
-    let singleNumber = opRegex.test(expr.at(-1));
+    const singleNumber = opRegex.test(expr.at(-1));
 
     // Replace operator if pressing operators consecutively
     if (singleNumber && opRegex.test(button)) {
@@ -80,7 +109,7 @@ function updateExpression(event) {
 }
 
 function hasDecimal () {
-    let expression = expr.join('').split(opRegex);
+    const expression = expr.join('').split(opRegex);
     if (expression.length === 1 && !expression[0].includes('.')) {
         return true;
     }
@@ -96,13 +125,13 @@ function updateDisplay () {
         return;
     }
 
-    let toDisplay = expr.join('').split(opRegex).join(' ');
+    const toDisplay = expr.join('').split(opRegex).join(' ');
     display.textContent = toDisplay;
 }
 
 function evaluateExpression() {
-    let expression = expr.join('').split(opRegex);
-    let [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
+    const expression = expr.join('').split(opRegex);
+    const [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
     return operateExpression(num1, num2, op);
 }
 
