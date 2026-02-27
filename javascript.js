@@ -8,7 +8,7 @@ const opRegex = /([+|\-|*|/])/;
 const SYMBOL_TABLE = {
     clear: "clear",
     backspace: "back",
-    neg: '-',
+    pineapple: "pineapple",
     dec: '.',
 
     zero: 0,
@@ -38,7 +38,7 @@ body.addEventListener('keydown', e => resolveKey(e.key))
 function resolveKey(key) {
     let keyButton = null;
 
-    if (!isNaN(key)) {
+    if (!isNaN(key) || key === '.') {
         keyButton = [...numButtons].find(button => button.firstElementChild.textContent === key);
     }
     else if (opRegex.test(key)) {
@@ -80,18 +80,19 @@ function updateExpression(target) {
     const singleNumber = opRegex.test(expr.at(-1));
 
     // Replace operator if pressing operators consecutively
-    if (singleNumber && opRegex.test(button)) {
+    if (!hasDecimal() && button === '.') {
+        return;
+    }
+    else if (singleNumber && opRegex.test(button) && expr.length > 1) {
         expr.pop(); 
     }
-    else if (expr.some(item => opRegex.test(item)) && !singleNumber && type === "op") {
+    else if (expr.some(item => opRegex.test(item)) && expr.length > 1 && !singleNumber && type === "op") 
+    {
         justEvaluated = true;
         expr = [evaluateExpression()];
     }
     else if (justEvaluated && type === "num") {
         expr = [];
-    }
-    else if (!hasDecimal() && button === '.') {
-        return;
     }
     else if (button === 0 && !expr.length) {
         return;
@@ -130,7 +131,12 @@ function updateDisplay () {
 }
 
 function evaluateExpression() {
-    const expression = expr.join('').split(opRegex);
+    let expression = expr.join('').split(opRegex);
+    expression = expression.filter(Boolean);
+    if (expression[0] === '-') {
+        expression[1] = expression[0] + expression[1];
+        expression.splice(0, 1);
+    } 
     const [num1, op, num2] = [+expression[0], expression[1], +expression[2]];
     return operateExpression(num1, num2, op);
 }
