@@ -91,6 +91,10 @@ body {
     margin: 0px 16px;
 }
 
+button > div {
+    pointer-events: none;
+}
+
 .misc {
     font-size: 24px;
 }
